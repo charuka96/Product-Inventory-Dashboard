@@ -20,7 +20,6 @@ async function loadProducts() {
 
 function displayProducts(products) {
   productContainer.innerHTML = "";
-
   products.forEach((p) => {
     productContainer.innerHTML += `
       <div class="col-md-3 mb-4">
@@ -36,7 +35,35 @@ function displayProducts(products) {
             <button class="btn btn-sm btn-danger">Delete</button>
           </div>
         </div>
-      </div>
-    `;
+      </div>`;
   });
+}
+
+
+//addProduct
+document.getElementById("productForm").addEventListener("submit", addProduct);
+async function addProduct(event){
+    event.preventDefault();
+
+    const title = document.getElementById("title").value;
+    const price = document.getElementById("price").value;
+    const category = document.getElementById("category").value;
+    const image = document.getElementById("image").value;
+
+
+    const newProduct = {      
+        title,
+        price,
+        category,
+        thumbnail: image
+    };
+    const responce = await fetch("https://dummyjson.com/products/add", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(newProduct)
+    });
+    const data = await responce.json();
+    console.log("Product added:", data);
+    modal.hide();
+    loadProducts();
 }
